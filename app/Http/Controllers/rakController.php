@@ -7,52 +7,60 @@ use App\Models\rak;
 
 class rakController extends Controller
 {
-    public function buat()
+    public function __construct() 
     {
-        return view("rak.form-input");
+        $this->middleware('auth');
+    }
+    
+    public function buatrak()
+    {
+        return view("rak/form-input");
     }
 
-    public function simpan(Request $request)
+    public function simpanrak(Request $request)
     {
         $rak = new rak();
-        $rak->nama = $request->get("nama");
-        $rak->keterangan = $request->get("keterangan");
+        $rak->nama_rak = $request->get("nama_rak");
+        $rak->lokasi_rak = $request->get("lokasi_rak");
         $rak->save();
 
-        return redirect(route("tampil_rak", ['id' => $rak->id]));
+        return redirect(route("semuarak", ['id' => $rak->id]));
     }
 
-    public function tampil($id)
+    public function tampilrak($id)
     {
         $rak = rak::find($id);
 
-        return view("rak.tampil")->with("rak", $rak);
+        return view("rak/tampil")->with("rak", $rak);
     }
 
-    public function semua()
+    public function semuarak()
     {
         $data = rak::all();
-        return view("rak.semua")->with("data", $data);
+        return view("rak/semua")->with("data", $data);
     }
 
-    public function ubah($id)
+    public function ubahrak($id)
     {
-        return view("rak.form-edit")->with("id", $id);
+        $data_rak = rak::find($id);
+        $rak = rak::all();
+        return view ("rak/form-edit")
+        ->with(["data_rak" => $data_rak, "rak" => $rak]);
     }
 
-    public function update(Request $request, $id)
+    public function updaterak(Request $request, $id)
     {
-        $rak = rak::find($id);
-        $rak->nama = $request->get("nama");
-        $rak->keterangan = $request->get("keterangan");
+        $rak = rak::findOrFail($id);
+        $rak->nama_rak = $request->get("nama_rak");
+        $rak->lokasi_rak = $request->get("lokasi_rak");
         $rak->save();
 
-        return redirect(route("tampil_rak", ['id' => $rak->id]));
+        return redirect(route("semuarak"));
     }
 
-    public function hapus($id)
+    public function hapusrak($id)
     {
         rak::destroy($id);
-        return redirect(route('semua_rak'));
+        return redirect(route('semuarak'));
     }
 }

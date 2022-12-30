@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ContohController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SecurityController;
-use App\Http\Controllers\bukuController;
-use App\Http\Controllers\peminjamanController;
+use App\Http\Controllers\barangController;
+use App\Http\Controllers\barang_masukController;
 use App\Http\Controllers\rakController;
-use App\Http\Controllers\petugasController;
+use App\Http\Controllers\barang_keluarController;
 
 
 /*
@@ -22,76 +22,84 @@ use App\Http\Controllers\petugasController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(route("login"));
 });
 
-Route::get("/hii/panggilan/{nama}", [ContohController::class, "hii"])->name("hii");
+// Route::get('/home', function () {
+//     return view('home');
+// })->name("home");
 
-Route::get('/yola', function() {
-    echo "Yolanda";
-});
+Route::get('/forgot-password', function () {
+    return view('forgot-password');
+})->name("forgot-password");
 
-Route::get('/yolanda', function () {
-    return view('yolanda');
-})->name("home");
 
-Route::get('/yola', function () {
-    return view('yola');
-})->name("about");
 
-Route::get('/yolan', function () {
-    return view('yolan');
-})->name("contact");
 
-Route::get('/my-education', function () {
-    return view('education');
-})->name("pendidikan");
-
-Route::get('/my-course', function () {
-    return view('course');
-})->name("kursus");
-
-Route::get("/tampil-user",[UserController::class,"tampil"])->name("user_all");;
-Route::get("/input-user",[UserController::class,"formInput"])->name("user_input");;
-Route::post("/simpan-user",[UserController::class,"simpan"])->name("user_simpan");;
-
-Route::get("/edit-user/{id}",[UserController::class,"formEdit"])->name("user_edit");;
-Route::put("/update-user/{id}",[UserController::class,"update"])->name("user_update");;
-Route::delete("/hapus-user/{id}",[UserController::class,"hapus"])->name("user_hapus");;
-
-Route::get("/tampil-user/{id}",[UserController::class,"show"])->name("user_show");;
 Route::get("/login", [SecurityController::class, "formLogin"])->name("login");
 Route::post("/proses-login", [SecurityController::class, "prosesLogin"])->name("proses_login");
 Route::get("/logout", [SecurityController::class, "logout"])->name("logout");
 
-Route::get("buku/buat", [bukuController::class, 'buat'])->name("buat_buku");
-Route::post("buku/simpan", [bukuController::class, 'simpan'])->name("simpan_buku");
-Route::get("buku/tampil/{id}", [bukuController::class, 'tampil'])->name("tampil_buku");
-Route::get("buku/semua", [bukuController::class, 'semua'])->name("semua_buku");
-Route::get("buku/ubah/{id}", [bukuController::class, 'ubah'])->name("ubah_buku");
-Route::put("buku/update/{id}", [bukuController::class, 'update'])->name("update_buku");
-Route::delete("buku/hapus/{id}", [bukuController::class, 'hapus'])->name("hapus_buku");
+Route::get("/home", [UserController::class, "home"])->name("home")->middleware('auth');
+Route::get("/home/user", [UserController::class, "homeUser"])->name("home_user")->middleware('auth');
 
-Route::get("peminjaman/buat", [peminjamanController::class, 'buat'])->name("buat_peminjaman");
-Route::post("peminjaman/simpan", [peminjamanController::class, 'simpan'])->name("simpan_peminjaman");
-Route::get("peminjaman/tampil/{id}", [peminjamanController::class, 'tampil'])->name("tampil_peminjaman");
-Route::get("peminjaman/semua", [peminjamanController::class, 'semua'])->name("semua_peminjaman");
-Route::get("peminjaman/ubah/{id}", [peminjamanController::class, 'ubah'])->name("ubah_peminjaman");
-Route::put("peminjaman/update/{id}", [peminjamanController::class, 'update'])->name("update_peminjaman");
-Route::delete("peminjaman/hapus/{id}", [peminjamanController::class, 'hapus'])->name("hapus_peminjaman");
+Route::get("/register", [UserController::class, "register"])->name("register");
+Route::post("/register/simpan", [UserController::class, "register_simpan"])->name("register_simpan")->middleware('auth');
+Route::get("/user/tampil",[UserController::class,"tampil"])->name("user_all")->middleware('auth');
+Route::get("/user/input",[UserController::class,"formInput"])->name("user_input")->middleware('auth');
+Route::post("/user/simpan",[UserController::class,"simpan"])->name("user_simpan")->middleware('auth');
+Route::get("/user/edit/{id}",[UserController::class,"formEdit"])->name("user_edit")->middleware('auth');
+Route::put("/user/update/{id}",[UserController::class,"update"])->name("user_update")->middleware('auth');
+Route::delete("/user/hapus/{id}",[UserController::class,"hapus"])->name("user_hapus")->middleware('auth');
+Route::get("/user/tampil/{id}",[UserController::class,"user_show"])->name("user_show")->middleware('auth');
 
-Route::get("rak/buat", [rakController::class, 'buat'])->name("buat_rak");
-Route::post("rak/simpan", [rakController::class, 'simpan'])->name("simpan_rak");
-Route::get("rak/tampil/{id}", [rakController::class, 'tampil'])->name("tampil_rak");
-Route::get("rak/semua", [rakController::class, 'semua'])->name("semua_rak");
-Route::get("rak/ubah/{id}", [rakController::class, 'ubah'])->name("ubah_rak");
-Route::put("rak/update/{id}", [rakController::class, 'update'])->name("update_rak");
-Route::delete("rak/hapus/{id}", [rakController::class, 'hapus'])->name("hapus_rak");
 
-Route::get("petugas/buat", [petugasController::class, 'buat'])->name("buat_petugas");
-Route::post("petugas/simpan", [petugasController::class, 'simpan'])->name("simpan_petugas");
-Route::get("petugas/tampil/{id}", [petugasController::class, 'tampil'])->name("tampil_petugas");
-Route::get("petugas/semua", [petugasController::class, 'semua'])->name("semua_petugas");
-Route::get("petugas/ubah/{id}", [petugasController::class, 'ubah'])->name("ubah_petugas");
-Route::put("petugas/update/{id}", [petugasController::class, 'update'])->name("update_petugas");
-Route::delete("petugas/hapus/{id}", [petugasController::class, 'hapus'])->name("hapus_petugas");
+Route::get("/barang/buat", [barangController::class, 'buatbarang'])->name("buatbarang");
+Route::get("/barang/tampil", [barangController::class, 'tampilbarang'])->name("tampilbarang");
+Route::get("/barang/tambah", [barangController::class, 'tambahbarang'])->name("tambahbarang");
+Route::get("/barang/semua", [barangController::class, 'semuabarang'])->name("semuabarang");
+Route::post("/barang/simpan", [barangController::class, 'simpanbarang'])->name("simpanbarang");
+Route::get("/barang/show/{id}", [barangController::class, 'showbarang'])->name("showbarang");
+Route::get("/barang/edit/{id}", [barangController::class, 'editbarang'])->name("editbarang");
+Route::put("/barang/update/{id}", [barangController::class, 'updatebarang'])->name("updatebarang");
+Route::delete("/barang/hapus/{id}", [barangController::class, 'hapusbarang'])->name("hapusbarang");
+
+
+// Route::get("/buatbarang", [barangController::class, 'buatbarang'])->name("buatbarang");
+// Route::get("/tampilbarang", [barangController::class, 'tampilbarang'])->name("tampilbarang");
+// Route::get("/tambahbarang", [barangController::class, 'tambahbarang'])->name("tambahbarang");
+// Route::get("/semuabarang", [barangController::class, 'semuabarang'])->name("semuabarang");
+// Route::post("/simpanbarang", [barangController::class, 'simpanbarang'])->name("simpanbarang");
+// Route::get("/showbarang{id}", [barangController::class, 'showbarang'])->name("showbarang");
+// Route::get("/editbarang{id}", [barangController::class, 'editbarang'])->name("editbarang");
+// Route::put("/updatebarang{id}", [barangController::class, 'updatebarang'])->name("updatebarang");
+// Route::delete("/baranghapus{id}", [barangController::class, 'hapusbarang'])->name("hapusbarang");
+
+
+Route::get("/rak/buat", [rakController::class, 'buatrak'])->name("buatrak");
+Route::post("/rak/simpan", [rakController::class, 'simpanrak'])->name("simpanrak");
+Route::get("/rak/tampil/{id}", [rakController::class, 'tampilrak'])->name("tampilrak");
+Route::get("/rak/semua", [rakController::class, 'semuarak'])->name("semuarak");
+Route::get("/rak/ubah/{id}", [rakController::class, 'ubahrak'])->name("ubahrak");
+Route::post("/rak/update/{id}", [rakController::class, 'updaterak'])->name("updaterak");
+Route::delete("/rak/hapus/{id}", [rakController::class, 'hapusrak'])->name("hapusrak");
+
+
+Route::get("/barang_masuk/buat", [barang_masukController::class, 'buatbarang_masuk'])->name("buat_barang_masuk");
+Route::post("/barang_masuk/simpan", [barang_masukController::class, 'simpanbarang_masuk'])->name("simpan_barang_masuk");
+Route::get("/barang_masuk/tampil/{id}", [barang_masukController::class, 'tampilbarang_masuk'])->name("tampil_barang_masuk");
+// Route::get("/barang_masuk/tampil/{id}", [barang_masukController::class, 'tampilbarang_masuk'])->name("tampil_barang_masuk");
+Route::get("/barang_masuk/semua", [barang_masukController::class, 'semuabarang_masuk'])->name("semua_barang_masuk");
+Route::get("/barang_masuk/ubah/{id}", [barang_masukController::class, 'ubahbarang_masuk'])->name("ubah_barang_masuk");
+Route::put("/barang_masuk/update/{id}", [barang_masukController::class, 'updatebarang_masuk'])->name("update_barang_masuk");
+Route::delete("/barang_masuk/hapus/{id}", [barang_masukController::class, 'hapusbarang_masuk'])->name("hapus_barang_masuk");
+
+
+Route::get("/barang_keluar/buat", [barang_keluarController::class, 'buatbarang_keluar'])->name("buat_barang_keluar");
+Route::post("/barang_keluar/simpan", [barang_keluarController::class, 'simpanbarang_keluar'])->name("simpan_barang_keluar");
+Route::get("/barang_keluar/tampil/{id}", [barang_keluarController::class, 'tampilbarang_keluar'])->name("tampil_barang_keluar");
+// Route::get("/barang_keluar/tampil/{id}", [barang_keluarController::class, 'tampilbarang_keluar'])->name("tampil_barang_keluar");
+Route::get("/barang_keluar/semua", [barang_keluarController::class, 'semuabarang_keluar'])->name("semua_barang_keluar");
+Route::get("/barang_keluar/ubah/{id}", [barang_keluarController::class, 'ubahbarang_keluar'])->name("ubah_barang_keluar");
+Route::put("/barang_keluar/update/{id}", [barang_keluarController::class, 'updatebarang_keluar'])->name("update_barang_keluar");
+Route::delete("/barang_keluar/hapus/{id}", [barang_keluarController::class, 'hapusbarang_keluar'])->name("hapus_barang_keluar");

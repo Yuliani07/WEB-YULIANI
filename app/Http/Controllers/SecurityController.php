@@ -15,12 +15,17 @@ class SecurityController extends Controller
     public function prosesLogin(Request $request)
     {
         session_start();
-        $username = $request->get("username");
+        $name = $request->get("name");
         $password = $request->get("password");
-        $user = User::where('username', $username)->where("password", $password)->first();
+        $user = User::where('name', $name)->where("password", $password)->first();
         if ($user != null) {
             Auth::login($user);
-            return "Login Berhasil";
+            if($user->level == "Admin"){
+                return redirect(route("home"));
+            }
+            else{
+                return redirect(route("home_user"));
+            }
         } else {
             return back();
         }

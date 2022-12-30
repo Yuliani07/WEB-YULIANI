@@ -9,4 +9,8 @@ class rak extends Model
 {
     use HasFactory;
     protected $table = "rak";
+
+    public function barang (){
+        return $this->hasMany(barang::class, "id_rak","id");
+    }
 }
